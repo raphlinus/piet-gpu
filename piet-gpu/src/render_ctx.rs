@@ -187,6 +187,10 @@ impl RenderContext for PietGpuRenderContext {
                 let lin = self.ramp_cache.add_linear_gradient(&lin);
                 Ok(PietGpuBrush::LinGradient(lin))
             }
+            FixedGradient::Radial(rad) => {
+                let rad = self.ramp_cache.add_radial_gradient(&rad);
+                todo!()
+            }
             _ => todo!("don't do radial gradients yet"),
         }
     }

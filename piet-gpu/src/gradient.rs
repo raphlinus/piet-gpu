@@ -18,19 +18,26 @@
 
 use std::collections::hash_map::{Entry, HashMap};
 
-use piet::{Color, FixedLinearGradient, GradientStop};
+use piet::{Color, FixedLinearGradient, GradientStop, FixedRadialGradient};
 
 #[derive(Clone)]
 pub struct BakedGradient {
     ramp: Vec<u32>,
 }
 
-/// This is basically the same type as scene::FillLinGradient, so could
-/// potentially use that directly.
 #[derive(Clone)]
 pub struct LinearGradient {
     pub(crate) start: [f32; 2],
     pub(crate) end: [f32; 2],
+    pub(crate) ramp_id: u32,
+}
+
+#[derive(Clone)]
+pub struct RadialGradient {
+    pub(crate) start: [f32; 2],
+    pub(crate) end: [f32; 2],
+    pub(crate) r0: f32,
+    pub(crate) r1: f32,
     pub(crate) ramp_id: u32,
 }
 
@@ -151,6 +158,18 @@ impl RampCache {
             ramp_id: ramp_id as u32,
             start: crate::render_ctx::to_f32_2(lin.start),
             end: crate::render_ctx::to_f32_2(lin.end),
+        }
+    }
+
+    pub fn add_radial_gradient(&mut self, rad: &FixedRadialGradient) -> RadialGradient {
+        let ramp_id = self.add_ramp(&rad.stops);
+        RadialGradient {
+            ramp_id: ramp_id as u32,
+            start: crate::render_ctx::to_f32_2(rad.center + rad.origin_offset),
+            end: crate::render_ctx::to_f32_2(rad.center),
+            // TODO: no current way to spec nonzero values in piet
+            r0: 0.0,
+            r1: rad.radius as f32,
         }
     }
 

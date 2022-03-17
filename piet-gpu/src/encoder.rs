@@ -79,6 +79,16 @@ pub struct FillLinGradient {
     p1: [f32; 2],
 }
 
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default, Zeroable, Pod)]
+pub struct FillRadGradient {
+    index: u32,
+    p0: [f32; 2],
+    p1: [f32; 2],
+    r0: f32,
+    r1: f32,
+}
+
 #[allow(unused)]
 #[repr(C)]
 #[derive(Clone, Copy, Debug, Default, Zeroable, Pod)]
