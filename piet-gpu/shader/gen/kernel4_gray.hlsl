@@ -1059,7 +1059,8 @@ void comp_main()
                     fg_rgba.x = _2092.x;
                     fg_rgba.y = _2092.y;
                     fg_rgba.z = _2092.z;
-                    rgba[k_9] = fg_rgba;
+                    float4 fg_k_1 = fg_rgba * area[k_9];
+                    rgba[k_9] = (rgba[k_9] * (1.0f - fg_k_1.w)) + fg_k_1;
                 }
                 cmd_ref.offset += 20u;
                 break;
@@ -1071,13 +1072,13 @@ void comp_main()
                 CmdImage fill_img = Cmd_Image_read(param_30, param_31);
                 uint2 param_32 = xy_uint;
                 CmdImage param_33 = fill_img;
-                float4 _2121[8];
-                fillImage(_2121, param_32, param_33);
-                float4 img[8] = _2121;
+                float4 _2135[8];
+                fillImage(_2135, param_32, param_33);
+                float4 img[8] = _2135;
                 for (uint k_10 = 0u; k_10 < 8u; k_10++)
                 {
-                    float4 fg_k_1 = img[k_10] * area[k_10];
-                    rgba[k_10] = (rgba[k_10] * (1.0f - fg_k_1.w)) + fg_k_1;
+                    float4 fg_k_2 = img[k_10] * area[k_10];
+                    rgba[k_10] = (rgba[k_10] * (1.0f - fg_k_2.w)) + fg_k_2;
                 }
                 cmd_ref.offset += 12u;
                 break;
@@ -1088,8 +1089,8 @@ void comp_main()
                 {
                     uint d_2 = min(clip_depth, 127u);
                     float4 param_34 = float4(rgba[k_11]);
-                    uint _2184 = packsRGB(param_34);
-                    blend_stack[d_2][k_11] = _2184;
+                    uint _2198 = packsRGB(param_34);
+                    blend_stack[d_2][k_11] = _2198;
                     rgba[k_11] = 0.0f.xxxx;
                 }
                 clip_depth++;
@@ -1114,12 +1115,12 @@ void comp_main()
                     float3 param_39 = fg_1.xyz;
                     uint param_40 = blend_mode;
                     float3 blend = mix_blend(param_38, param_39, param_40);
-                    float4 _2251 = fg_1;
-                    float _2255 = fg_1.w;
-                    float3 _2262 = lerp(_2251.xyz, blend, float((_2255 * bg.w) > 0.0f).xxx);
-                    fg_1.x = _2262.x;
-                    fg_1.y = _2262.y;
-                    fg_1.z = _2262.z;
+                    float4 _2265 = fg_1;
+                    float _2269 = fg_1.w;
+                    float3 _2276 = lerp(_2265.xyz, blend, float((_2269 * bg.w) > 0.0f).xxx);
+                    fg_1.x = _2276.x;
+                    fg_1.y = _2276.y;
+                    fg_1.z = _2276.z;
                     float3 param_41 = bg.xyz;
                     float3 param_42 = fg_1.xyz;
                     float param_43 = bg.w;
@@ -1134,8 +1135,8 @@ void comp_main()
             {
                 Alloc param_46 = cmd_alloc;
                 CmdRef param_47 = cmd_ref;
-                CmdRef _2299 = { Cmd_Jump_read(param_46, param_47).new_ref };
-                cmd_ref = _2299;
+                CmdRef _2313 = { Cmd_Jump_read(param_46, param_47).new_ref };
+                cmd_ref = _2313;
                 cmd_alloc.offset = cmd_ref.offset;
                 break;
             }

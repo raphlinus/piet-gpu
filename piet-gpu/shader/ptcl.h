@@ -18,6 +18,10 @@ struct CmdLinGradRef {
     uint offset;
 };
 
+struct CmdRadGradRef {
+    uint offset;
+};
+
 struct CmdImageRef {
     uint offset;
 };
@@ -81,6 +85,21 @@ struct CmdLinGrad {
 
 CmdLinGradRef CmdLinGrad_index(CmdLinGradRef ref, uint index) {
     return CmdLinGradRef(ref.offset + index * CmdLinGrad_size);
+}
+
+struct CmdRadGrad {
+    uint index;
+    vec4 mat;
+    vec2 xlat;
+    vec2 c1;
+    float ra;
+    float roff;
+};
+
+#define CmdRadGrad_size 44
+
+CmdRadGradRef CmdRadGrad_index(CmdRadGradRef ref, uint index) {
+    return CmdRadGradRef(ref.offset + index * CmdRadGrad_size);
 }
 
 struct CmdImage {
@@ -211,6 +230,44 @@ void CmdLinGrad_write(Alloc a, CmdLinGradRef ref, CmdLinGrad s) {
     write_mem(a, ix + 1, floatBitsToUint(s.line_x));
     write_mem(a, ix + 2, floatBitsToUint(s.line_y));
     write_mem(a, ix + 3, floatBitsToUint(s.line_c));
+}
+
+CmdRadGrad CmdRadGrad_read(Alloc a, CmdRadGradRef ref) {
+    uint ix = ref.offset >> 2;
+    uint raw0 = read_mem(a, ix + 0);
+    uint raw1 = read_mem(a, ix + 1);
+    uint raw2 = read_mem(a, ix + 2);
+    uint raw3 = read_mem(a, ix + 3);
+    uint raw4 = read_mem(a, ix + 4);
+    uint raw5 = read_mem(a, ix + 5);
+    uint raw6 = read_mem(a, ix + 6);
+    uint raw7 = read_mem(a, ix + 7);
+    uint raw8 = read_mem(a, ix + 8);
+    uint raw9 = read_mem(a, ix + 9);
+    uint raw10 = read_mem(a, ix + 10);
+    CmdRadGrad s;
+    s.index = raw0;
+    s.mat = vec4(uintBitsToFloat(raw1), uintBitsToFloat(raw2), uintBitsToFloat(raw3), uintBitsToFloat(raw4));
+    s.xlat = vec2(uintBitsToFloat(raw5), uintBitsToFloat(raw6));
+    s.c1 = vec2(uintBitsToFloat(raw7), uintBitsToFloat(raw8));
+    s.ra = uintBitsToFloat(raw9);
+    s.roff = uintBitsToFloat(raw10);
+    return s;
+}
+
+void CmdRadGrad_write(Alloc a, CmdRadGradRef ref, CmdRadGrad s) {
+    uint ix = ref.offset >> 2;
+    write_mem(a, ix + 0, s.index);
+    write_mem(a, ix + 1, floatBitsToUint(s.mat.x));
+    write_mem(a, ix + 2, floatBitsToUint(s.mat.y));
+    write_mem(a, ix + 3, floatBitsToUint(s.mat.z));
+    write_mem(a, ix + 4, floatBitsToUint(s.mat.w));
+    write_mem(a, ix + 5, floatBitsToUint(s.xlat.x));
+    write_mem(a, ix + 6, floatBitsToUint(s.xlat.y));
+    write_mem(a, ix + 7, floatBitsToUint(s.c1.x));
+    write_mem(a, ix + 8, floatBitsToUint(s.c1.y));
+    write_mem(a, ix + 9, floatBitsToUint(s.ra));
+    write_mem(a, ix + 10, floatBitsToUint(s.roff));
 }
 
 CmdImage CmdImage_read(Alloc a, CmdImageRef ref) {

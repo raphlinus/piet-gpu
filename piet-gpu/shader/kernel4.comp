@@ -192,7 +192,8 @@ void main() {
                 int x = int(round(clamp(my_d, 0.0, 1.0) * float(GRADIENT_WIDTH - 1)));
                 mediump vec4 fg_rgba = imageLoad(gradients, ivec2(x, int(lin.index)));
                 fg_rgba.rgb = fromsRGB(fg_rgba.rgb);
-                rgba[k] = fg_rgba;
+                mediump vec4 fg_k = fg_rgba * area[k];
+                rgba[k] = rgba[k] * (1.0 - fg_k.a) + fg_k;
             }
             cmd_ref.offset += 4 + CmdLinGrad_size;
             break;
