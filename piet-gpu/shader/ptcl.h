@@ -150,11 +150,12 @@ CmdJumpRef CmdJump_index(CmdJumpRef ref, uint index) {
 #define Cmd_Alpha 4
 #define Cmd_Color 5
 #define Cmd_LinGrad 6
-#define Cmd_Image 7
-#define Cmd_BeginClip 8
-#define Cmd_EndClip 9
-#define Cmd_Jump 10
-#define Cmd_size 20
+#define Cmd_RadGrad 7
+#define Cmd_Image 8
+#define Cmd_BeginClip 9
+#define Cmd_EndClip 10
+#define Cmd_Jump 11
+#define Cmd_size 48
 
 CmdRef Cmd_index(CmdRef ref, uint index) {
     return CmdRef(ref.offset + index * Cmd_size);
@@ -350,6 +351,10 @@ CmdLinGrad Cmd_LinGrad_read(Alloc a, CmdRef ref) {
     return CmdLinGrad_read(a, CmdLinGradRef(ref.offset + 4));
 }
 
+CmdRadGrad Cmd_RadGrad_read(Alloc a, CmdRef ref) {
+    return CmdRadGrad_read(a, CmdRadGradRef(ref.offset + 4));
+}
+
 CmdImage Cmd_Image_read(Alloc a, CmdRef ref) {
     return CmdImage_read(a, CmdImageRef(ref.offset + 4));
 }
@@ -393,6 +398,11 @@ void Cmd_Color_write(Alloc a, CmdRef ref, CmdColor s) {
 void Cmd_LinGrad_write(Alloc a, CmdRef ref, CmdLinGrad s) {
     write_mem(a, ref.offset >> 2, Cmd_LinGrad);
     CmdLinGrad_write(a, CmdLinGradRef(ref.offset + 4), s);
+}
+
+void Cmd_RadGrad_write(Alloc a, CmdRef ref, CmdRadGrad s) {
+    write_mem(a, ref.offset >> 2, Cmd_RadGrad);
+    CmdRadGrad_write(a, CmdRadGradRef(ref.offset + 4), s);
 }
 
 void Cmd_Image_write(Alloc a, CmdRef ref, CmdImage s) {

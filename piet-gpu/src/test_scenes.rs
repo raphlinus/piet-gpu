@@ -5,7 +5,7 @@ use rand::{Rng, RngCore};
 use crate::{Blend, BlendMode, CompositionMode, PietGpuRenderContext};
 use piet::kurbo::{Affine, BezPath, Circle, Line, Point, Rect, Shape};
 use piet::{
-    Color, FixedGradient, FixedLinearGradient, GradientStop, Text, TextAttribute, TextLayoutBuilder,
+    Color, FixedGradient, FixedRadialGradient, GradientStop, Text, TextAttribute, TextLayoutBuilder,
 };
 
 use crate::{PicoSvg, RenderContext, Vec2};
@@ -153,12 +153,13 @@ fn render_gradient_test(rc: &mut impl RenderContext) {
             pos: 1.0,
         },
     ];
-    let lin = FixedLinearGradient {
-        start: Point::new(0.0, 100.0),
-        end: Point::new(0.0, 300.0),
+    let rad = FixedRadialGradient {
+        center: Point::new(200.0, 200.0),
+        origin_offset: Vec2::ZERO,
+        radius: 100.0,
         stops,
     };
-    let brush = FixedGradient::Linear(lin);
+    let brush = FixedGradient::Radial(rad);
     //let brush = Color::rgb8(0, 128, 0);
     rc.fill(Rect::new(100.0, 100.0, 300.0, 300.0), &brush);
 }

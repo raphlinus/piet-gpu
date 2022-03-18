@@ -53,6 +53,7 @@ piet_gpu! {
             Alpha(CmdAlpha),
             Color(CmdColor),
             LinGrad(CmdLinGrad),
+            RadGrad(CmdRadGrad),
             Image(CmdImage),
             BeginClip,
             EndClip(CmdEndClip),

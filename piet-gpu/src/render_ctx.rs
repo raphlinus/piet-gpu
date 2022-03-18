@@ -13,7 +13,7 @@ use piet_gpu_hal::BufWrite;
 use piet_gpu_types::encoder::{Encode, Encoder};
 use piet_gpu_types::scene::Element;
 
-use crate::gradient::{LinearGradient, RampCache};
+use crate::gradient::{LinearGradient, RadialGradient, RampCache};
 use crate::text::Font;
 pub use crate::text::{PietGpuText, PietGpuTextLayout, PietGpuTextLayoutBuilder};
 use crate::Blend;
@@ -50,6 +50,7 @@ pub struct PietGpuRenderContext {
 pub enum PietGpuBrush {
     Solid(u32),
     LinGradient(LinearGradient),
+    RadGradient(RadialGradient),
 }
 
 #[derive(Default)]
@@ -189,7 +190,7 @@ impl RenderContext for PietGpuRenderContext {
             }
             FixedGradient::Radial(rad) => {
                 let rad = self.ramp_cache.add_radial_gradient(&rad);
-                todo!()
+                Ok(PietGpuBrush::RadGradient(rad))
             }
             _ => todo!("don't do radial gradients yet"),
         }
@@ -423,6 +424,10 @@ impl PietGpuRenderContext {
             PietGpuBrush::LinGradient(lin) => {
                 self.new_encoder
                     .fill_lin_gradient(lin.ramp_id, lin.start, lin.end);
+            }
+            PietGpuBrush::RadGradient(rad) => {
+                self.new_encoder
+                    .fill_rad_gradient(rad.ramp_id, rad.start, rad.end, rad.r0, rad.r1);
             }
         }
     }

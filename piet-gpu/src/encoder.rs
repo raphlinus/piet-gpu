@@ -62,6 +62,7 @@ const ANNOTATED_SIZE: usize = 40;
 // Tags for draw objects. See shader/drawtag.h for the authoritative source.
 const DRAWTAG_FILLCOLOR: u32 = 0x44;
 const DRAWTAG_FILLLINGRADIENT: u32 = 0x114;
+const DRAWTAG_FILLRADGRADIENT: u32 = 0x2dc;
 const DRAWTAG_BEGINCLIP: u32 = 0x05;
 const DRAWTAG_ENDCLIP: u32 = 0x25;
 
@@ -157,6 +158,16 @@ impl Encoder {
         self.drawdata_stream.extend(bytemuck::bytes_of(&element));
     }
 
+
+    /// Encode a fill radial gradient draw object.
+    ///
+    /// This should be encoded after a path.
+    pub fn fill_rad_gradient(&mut self, index: u32, p0: [f32; 2], p1: [f32; 2], r0: f32, r1: f32) {
+        self.drawtag_stream.push(DRAWTAG_FILLRADGRADIENT);
+        let element = FillRadGradient { index, p0, p1, r0, r1 };
+        self.drawdata_stream.extend(bytemuck::bytes_of(&element));
+    }
+    
     /// Start a clip.
     pub fn begin_clip(&mut self, blend: Option<Blend>) {
         self.drawtag_stream.push(DRAWTAG_BEGINCLIP);
@@ -230,7 +241,7 @@ impl Encoder {
         alloc += n_drawobj * DRAW_BBOX_SIZE;
         let drawinfo_alloc = alloc;
         // TODO: not optimized; it can be accumulated during encoding or summed from drawtags
-        const MAX_DRAWINFO_SIZE: usize = 16;
+        const MAX_DRAWINFO_SIZE: usize = 44;
         alloc += n_drawobj * MAX_DRAWINFO_SIZE;
 
         let config = Config {
