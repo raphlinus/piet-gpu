@@ -2,7 +2,7 @@
 
 use rand::{Rng, RngCore};
 
-use crate::{Blend, BlendMode, CompositionMode, PietGpuRenderContext};
+use crate::{Blend, BlendMode, CompositionMode, PietGpuRenderContext, Colrv1RadialGradient};
 use piet::kurbo::{Affine, BezPath, Circle, Line, Point, Rect, Shape};
 use piet::{
     Color, FixedGradient, FixedRadialGradient, GradientStop, Text, TextAttribute, TextLayoutBuilder,
@@ -32,7 +32,7 @@ pub fn render_svg(rc: &mut impl RenderContext, filename: &str, scale: f64) {
     println!("flattening and encoding time: {:?}", start.elapsed());
 }
 
-pub fn render_scene(rc: &mut impl RenderContext) {
+pub fn render_scene(rc: &mut PietGpuRenderContext) {
     const WIDTH: usize = 2048;
     const HEIGHT: usize = 1536;
     let mut rng = rand::thread_rng();
@@ -142,7 +142,7 @@ fn render_alpha_test(rc: &mut impl RenderContext) {
 }
 
 #[allow(unused)]
-fn render_gradient_test(rc: &mut impl RenderContext) {
+fn render_gradient_test(rc: &mut PietGpuRenderContext) {
     let stops = vec![
         GradientStop {
             color: Color::rgb8(0, 255, 0),
@@ -153,13 +153,15 @@ fn render_gradient_test(rc: &mut impl RenderContext) {
             pos: 1.0,
         },
     ];
-    let rad = FixedRadialGradient {
-        center: Point::new(200.0, 200.0),
-        origin_offset: Vec2::ZERO,
-        radius: 100.0,
+    let rad = Colrv1RadialGradient {
+        center0: Point::new(200.0, 200.0),
+        center1: Point::new(250.0, 200.0),
+        radius0: 50.0,
+        radius1: 100.0,
         stops,
     };
-    let brush = FixedGradient::Radial(rad);
+    let brush = rc.radial_gradient_colrv1(&rad);
+    //let brush = FixedGradient::Radial(rad);
     //let brush = Color::rgb8(0, 128, 0);
     rc.fill(Rect::new(100.0, 100.0, 300.0, 300.0), &brush);
 }

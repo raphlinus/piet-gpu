@@ -13,7 +13,7 @@ use piet_gpu_hal::BufWrite;
 use piet_gpu_types::encoder::{Encode, Encoder};
 use piet_gpu_types::scene::Element;
 
-use crate::gradient::{LinearGradient, RadialGradient, RampCache};
+use crate::gradient::{LinearGradient, RadialGradient, RampCache, Colrv1RadialGradient};
 use crate::text::Font;
 pub use crate::text::{PietGpuText, PietGpuTextLayout, PietGpuTextLayoutBuilder};
 use crate::Blend;
@@ -341,6 +341,10 @@ impl PietGpuRenderContext {
         if let Some(tos) = self.state_stack.last_mut() {
             tos.n_clip += 1;
         }
+    }
+
+    pub fn radial_gradient_colrv1(&mut self, rad: &Colrv1RadialGradient) -> PietGpuBrush {
+        PietGpuBrush::RadGradient(self.ramp_cache.add_radial_gradient_colrv1(rad))
     }
 
     fn encode_path(&mut self, path: impl Iterator<Item = PathEl>, is_fill: bool) {
