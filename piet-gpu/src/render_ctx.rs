@@ -347,6 +347,16 @@ impl PietGpuRenderContext {
         PietGpuBrush::RadGradient(self.ramp_cache.add_radial_gradient_colrv1(rad))
     }
 
+    pub fn fill_transform(&mut self, shape: impl Shape, brush: &PietGpuBrush, transform: Affine) {
+        let path = shape.path_elements(TOLERANCE);
+        self.encode_linewidth(-1.0);
+        self.encode_path(path, true);
+        self.encode_transform(Transform::from_kurbo(transform));
+        self.new_encoder.swap_last_tags();
+        self.encode_brush(&brush);
+        self.encode_transform(Transform::from_kurbo(transform.inverse()));
+    }
+
     fn encode_path(&mut self, path: impl Iterator<Item = PathEl>, is_fill: bool) {
         if is_fill {
             self.encode_path_inner(

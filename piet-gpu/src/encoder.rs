@@ -134,6 +134,13 @@ impl Encoder {
         self.transform_stream.push(transform);
     }
 
+    // Swap the last two tags in the tag stream; used for transformed
+    // gradients.
+    pub fn swap_last_tags(&mut self) {
+        let len = self.tag_stream.len();
+        self.tag_stream.swap(len - 1, len - 2);
+    }
+
     // -1.0 means "fill"
     pub fn linewidth(&mut self, linewidth: f32) {
         self.tag_stream.push(0x40);

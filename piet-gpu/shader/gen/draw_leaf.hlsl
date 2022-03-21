@@ -177,7 +177,7 @@ void comp_main()
                 uint trans_ix = _285.Load((bbox_offset + 5u) * 4 + 8);
                 uint t = (_93.Load(36) >> uint(2)) + (6u * trans_ix);
                 mat = asfloat(uint4(_285.Load(t * 4 + 8), _285.Load((t + 1u) * 4 + 8), _285.Load((t + 2u) * 4 + 8), _285.Load((t + 3u) * 4 + 8)));
-                if (tag_word == 276u)
+                if ((tag_word == 276u) || (tag_word == 732u))
                 {
                     translate = asfloat(uint2(_285.Load((t + 4u) * 4 + 8), _285.Load((t + 5u) * 4 + 8)));
                 }

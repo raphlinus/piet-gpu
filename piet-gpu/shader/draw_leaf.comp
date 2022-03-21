@@ -110,7 +110,7 @@ void main() {
                 uint trans_ix = memory[bbox_offset + 5];
                 uint t = (conf.trans_alloc.offset >> 2) + 6 * trans_ix;
                 mat = uintBitsToFloat(uvec4(memory[t], memory[t + 1], memory[t + 2], memory[t + 3]));
-                if (tag_word == Drawtag_FillLinGradient) {
+                if (tag_word == Drawtag_FillLinGradient || tag_word == Drawtag_FillRadGradient) {
                     translate = uintBitsToFloat(uvec2(memory[t + 4], memory[t + 5]));
                 }
             }

@@ -163,7 +163,8 @@ fn render_gradient_test(rc: &mut PietGpuRenderContext) {
     let brush = rc.radial_gradient_colrv1(&rad);
     //let brush = FixedGradient::Radial(rad);
     //let brush = Color::rgb8(0, 128, 0);
-    rc.fill(Rect::new(100.0, 100.0, 300.0, 300.0), &brush);
+    let transform = Affine::new([1.0, 0.0, 0.0, 0.5, 0.0, 100.0]);
+    rc.fill_transform(Rect::new(100.0, 100.0, 300.0, 300.0), &brush, transform);
 }
 
 fn diamond(origin: Point) -> impl Shape {
