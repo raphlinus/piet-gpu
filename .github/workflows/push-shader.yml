@@ -13,7 +13,7 @@ jobs:
         run: |
           git fetch origin main
           git switch main
-          git merge dev
+          git merge dev -m "merge from dev branch"
           git rm -r --ignore-unmatch piet-gpu/shader/gen
           mkdir piet-gpu/shader/gen
       - uses: ./.github/actions/shader
@@ -24,7 +24,7 @@ jobs:
           git add piet-gpu/shader/gen
           git config user.name "Commit by GitHub Action"
           git config user.email "nobody@example.com"
-          git commit -m "add timestamp"
+          git commit -m "commit compiled shaders"
       - name: push
         if: steps.commit.outcome == 'success'
         run: |
