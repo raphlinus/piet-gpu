@@ -13,10 +13,8 @@ jobs:
         run: |
           git fetch origin main
           git switch main
+          git merge dev
           git rm -r --ignore-unmatch piet-gpu/shader/gen
-          git show-ref
-          git status
-          git merge ${{ github.ref }}
           mkdir piet-gpu/shader/gen
       - uses: ./.github/actions/shader
       - name: commit
@@ -30,5 +28,4 @@ jobs:
       - name: push
         if: steps.commit.outcome == 'success'
         run: |
-          git show-ref
           git push origin main
