@@ -16,7 +16,7 @@ jobs:
           git rm -r --ignore-unmatch piet-gpu/shader/gen
           git merge ${{ github.event.pull_request.head.ref }}
           mkdir piet-gpu/shader/gen
-      - uses: ./.github/workflows/shader
+      - uses: ./.github/workflows/shader.yml
       - name: commit
         id: commit
         continue-on-error: true
