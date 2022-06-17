@@ -1,0 +1,30 @@
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  push-shaders:
+    runs-on: windows-latest
+    name: compile shaders and push to main
+    steps:
+      - uses: actions/checkout@v3
+      - name: prepare repo for compilation
+        run: |
+          git fetch origin main
+          git switch main
+          git rm -r --ignore-unmatch piet-gpu/shader/gen
+          git merge ${{ github.event.pull_request.head.ref }}
+          mkdir piet-gpu/shader/gen
+      - uses: ./.github/workflows/shader
+      - name: commit
+        id: commit
+        continue-on-error: true
+        run: |
+          git add piet-gpu/shader/gen
+          git config user.name "Commit by GitHub Action"
+          git config user.email "nobody@example.com"
+          git commit -m "add timestamp"
+      - name: push
+        if: steps.commit.outcome == 'success'
+        run: git push origin main
