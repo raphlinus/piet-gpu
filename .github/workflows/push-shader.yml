@@ -9,6 +9,11 @@ jobs:
     name: compile shaders and push to main
     steps:
       - uses: actions/checkout@v3
+        with:
+          # need history to make the merge work
+          # possibly we can optimize this and set
+          # allow-unrelated-histories on merge
+          fetch-depth: 0
       - name: prepare repo for compilation
         run: |
           git fetch origin main
@@ -29,4 +34,4 @@ jobs:
         if: steps.commit.outcome == 'success'
         run: |
           git show-ref
-          git push origin HEAD:main
+          git push origin main
