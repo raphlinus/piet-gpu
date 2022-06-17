@@ -27,4 +27,6 @@ jobs:
           git commit -m "add timestamp"
       - name: push
         if: steps.commit.outcome == 'success'
-        run: git push origin main
+        run: |
+          git show-ref
+          git push origin main
