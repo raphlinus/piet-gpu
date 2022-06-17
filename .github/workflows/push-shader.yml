@@ -28,4 +28,5 @@ jobs:
       - name: push
         if: steps.commit.outcome == 'success'
         run: |
-          git push origin main
+          git show-ref
+          git push origin HEAD:main
