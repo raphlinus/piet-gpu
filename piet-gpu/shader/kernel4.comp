@@ -18,7 +18,7 @@
 #include "setup.h"
 
 #define CHUNK_X 2
-#define CHUNK_Y 4
+#define CHUNK_Y 1
 #define CHUNK (CHUNK_X * CHUNK_Y)
 #define CHUNK_DX (TILE_WIDTH_PX / CHUNK_X)
 #define CHUNK_DY (TILE_HEIGHT_PX / CHUNK_Y)
