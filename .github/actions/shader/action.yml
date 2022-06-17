@@ -17,4 +17,5 @@ runs:
 
     - name: run shader compilers
       run: ninja
+      shell: powershell
       working-directory: piet-gpu/shader
