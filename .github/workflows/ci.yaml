@@ -25,23 +25,48 @@ jobs:
           command: fmt
           args: --all -- --check
 
-  compile-shaders:
-    runs-on: windows-latest
-    name: compile shaders
-    steps:
-      - uses: actions/checkout@v2
-      - uses: seanmiddleditch/gha-setup-ninja@master
+  # compile-shaders:
+  #   runs-on: windows-latest
+  #   name: compile shaders
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: seanmiddleditch/gha-setup-ninja@master
 
-      - name: setup SPIRV tools
-        uses: humbletim/setup-vulkan-sdk@v1.2.0
-        with:
-          vulkan-query-version: 1.3.204.0
-          vulkan-components: Glslang, SPIRV-Cross
-          vulkan-use-cache: true
+  #     - name: setup SPIRV tools
+  #       uses: humbletim/setup-vulkan-sdk@v1.2.0
+  #       with:
+  #         vulkan-query-version: 1.3.204.0
+  #         vulkan-components: Glslang, SPIRV-Cross
+  #         vulkan-use-cache: true
       
-      - name: install DXC
-        uses: napokue/setup-dxc@v1.0.0
+  #     - name: install DXC
+  #       uses: napokue/setup-dxc@v1.0.0
 
-      - name: run shader compilers
-        run: ninja
-        working-directory: piet-gpu/shader
+  #     - name: run shader compilers
+  #       run: ninja
+  #       working-directory: piet-gpu/shader
+
+  make-commit:
+    runs-on: windows-latest
+    name: make a commit and push to foo
+    steps:
+      - uses: actions/checkout@v3
+      - name: create timestamp
+        run: |
+          git fetch origin foo
+          git switch foo
+          git rm -r --ignore-unmatch foo
+          git merge ${{ github.event.pull_request.head.ref }}
+          mkdir foo
+          Get-Date -DisplayHint Date > foo/timestamp
+          git add foo
+      - name: commit
+        id: commit
+        continue-on-error: true
+        run: |
+          git config user.name "Commit by GitHub Action"
+          git config user.email "nobody@example.com"
+          git commit -m "add timestamp"
+      - name: push
+        if: steps.commit.outcome == 'success'
+        run: git push origin foo
