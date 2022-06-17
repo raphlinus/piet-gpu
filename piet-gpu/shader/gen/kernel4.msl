@@ -516,7 +516,7 @@ CmdImage Cmd_Image_read(thread const Alloc& a, thread const CmdRef& ref, device 
 }
 
 static inline __attribute__((always_inline))
-spvUnsafeArray<float4, 8> fillImage(thread const uint2& xy, thread const CmdImage& cmd_img, thread texture2d<float> image_atlas)
+spvUnsafeArray<float4, 8> fillImage(thread const uint2& xy, thread const CmdImage& cmd_img, texture2d<float> image_atlas)
 {
     spvUnsafeArray<float4, 8> rgba;
     for (uint i = 0u; i < 8u; i++)
