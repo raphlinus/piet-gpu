@@ -14,6 +14,8 @@ jobs:
           git fetch origin main
           git switch main
           git rm -r --ignore-unmatch piet-gpu/shader/gen
+          git show-ref
+          git status
           git merge ${{ github.ref }}
           mkdir piet-gpu/shader/gen
       - uses: ./.github/actions/shader
